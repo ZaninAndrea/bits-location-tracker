@@ -23,6 +23,7 @@ type Place struct {
 
 func main() {
 	godotenv.Load()
+	authorizationBearer := "Bearer " + os.Getenv("SECRET")
 
 	ctx, release := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URI")))
@@ -63,6 +64,12 @@ func main() {
 		}
 
 		timestamp := c.Query("time")
+		authorization := c.GetHeader("Authorization")
+
+		if authorization != authorizationBearer {
+			c.String(400, "Wrong authorization bearer")
+			return
+		}
 
 		// Ignore positions with more than 70m of error
 		if acc > 70 {
