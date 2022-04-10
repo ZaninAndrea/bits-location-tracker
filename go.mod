@@ -1,4 +1,4 @@
-module github.com/ZaninAndrea/bits-gps-logger
+module github.com/ZaninAndrea/bits-location-tracker
 
 go 1.17
 
